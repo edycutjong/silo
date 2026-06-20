@@ -1,0 +1,93 @@
+@import url('./_tokens.css');
+
+/* === ASSET UTILITIES — hackathon pipeline only === */
+/* Used exclusively by generate-*.html files.
+   Real projects should @import _tokens.css directly and not this file. */
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: var(--bg-base);
+  color: var(--text-hi);
+  font-family: var(--font-ui);
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background-image: var(--gradient-mesh);
+  background-size: 100% 100%;
+  z-index: -2;
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: var(--grid-bg);
+  background-size: 40px 40px;
+  z-index: -1;
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: var(--noise-svg);
+  mix-blend-mode: overlay;
+  opacity: 0.04;
+  z-index: var(--z-overlay);
+  pointer-events: none;
+}
+
+.glass-panel {
+  backdrop-filter: var(--blur-glass);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-24);
+  box-shadow: var(--shadow-md);
+}
+
+.text-gradient {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tech-pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-mid);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot-pulse {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-success);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px var(--color-success);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 12px var(--color-success);
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+}

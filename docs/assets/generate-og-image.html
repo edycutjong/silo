@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Silo — OG Image Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./_asset-utilities.css">
+  <style>
+    body {
+      width: 1200px;
+      height: 630px;
+      position: relative;
+      font-family: var(--font-ui);
+      background-color: var(--bg-base);
+    }
+    
+    .container {
+      width: 100%;
+      height: 100%;
+      padding: 64px 80px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .left-content {
+      width: 55%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .badge-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .hero-metric {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .app-title {
+      font-family: var(--font-display);
+      font-size: 96px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 0.95;
+      margin: 0 0 20px 0;
+      text-shadow: 0 0 40px var(--primary-glow);
+    }
+
+    .one-liner {
+      font-size: 22px;
+      color: var(--text-mid);
+      line-height: 1.4;
+      margin: 0 0 32px 0;
+      font-weight: 400;
+      max-width: 90%;
+    }
+
+    .pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .right-content {
+      width: 40%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+    }
+
+    .perspective-card {
+      width: 400px;
+      height: 440px;
+      transform: perspective(1200px) rotateY(-14deg) rotateX(6deg);
+      border-radius: var(--radius-24);
+      padding: 28px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .card-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      filter: blur(20px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .console-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .console-body {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-mid);
+      line-height: 1.6;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .log-line {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .log-prefix {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 10px;
+      margin-bottom: 2px;
+    }
+
+    .log-value {
+      color: var(--text-hi);
+      background: rgba(0,0,0,0.2);
+      padding: 6px 10px;
+      border-radius: var(--radius-8);
+      border: 1px solid var(--border-subtle);
+      word-break: break-all;
+    }
+
+    .card-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .shield-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-mid);
+    }
+
+    .shield-icon {
+      width: 14px;
+      height: 14px;
+      fill: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <!-- Mesh Background -->
+  <div class="background"></div>
+  <div class="grid-overlay"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Content Container -->
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left-content">
+      <div class="badge-container">
+        <div class="live-badge">
+          <div class="status-dot-pulse"></div>
+          TEE SECURE DROP ACTIVE
+        </div>
+      </div>
+      
+      <div class="hero-metric">100% Insider Anonymity</div>
+      <h1 class="app-title text-gradient">SILO</h1>
+      <p class="one-liner">Zero-knowledge whistleblower drop shielding source identity inside a TEE.</p>
+      
+      <div class="pills-row">
+        <span class="tech-pill">TEE Enclave</span>
+        <span class="tech-pill">Secure Stash</span>
+        <span class="tech-pill">OTP Verify</span>
+        <span class="tech-pill">Blind Relay</span>
+        <span class="tech-pill">Terminal 3</span>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-content">
+      <div class="perspective-card glass-panel">
+        <div class="card-glow"></div>
+        
+        <div class="card-header">
+          <span class="console-title">Enclave Drops</span>
+          <span class="status-dot"></span>
+        </div>
+        
+        <div class="console-body">
+          <div class="log-line">
+            <span class="log-prefix">1. SECURE STASH UPLOAD</span>
+            <span class="log-value" style="color: var(--primary);">{"stashRef": "stash://file123", "SHA256": "e3b0c44..."}</span>
+          </div>
+          
+          <div class="log-line">
+            <span class="log-prefix">2. VERIFY HUMAN INSIDER</span>
+            <span class="log-value">OTP Verified &rarr; Mint Pseudonym: Source #7</span>
+          </div>
+
+          <div class="log-line">
+            <span class="log-prefix">3. SECURE REPORT DISPATCH</span>
+            <span class="log-value" style="color: var(--accent); border-color: rgba(34, 197, 94, 0.3);">[SD-JWT VC Issued & Blind Relayed to Inbox]</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="shield-badge">
+            <svg class="shield-icon" viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>Verified Human</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-low);">v1.0.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

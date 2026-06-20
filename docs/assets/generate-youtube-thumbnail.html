@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Silo — YouTube Thumbnail Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=JetBrains+Mono:wght@600&family=Orbitron:wght@800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./_asset-utilities.css">
+  <style>
+    body {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      font-family: var(--font-ui);
+      background-color: var(--bg-base);
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 80px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 10;
+    }
+
+    .bg-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 60%);
+      filter: blur(40px);
+      z-index: -1;
+      opacity: 0.8;
+    }
+
+    .kicker {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      margin-bottom: 24px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      padding: 8px 20px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .main-title {
+      font-family: var(--font-display);
+      font-size: 100px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin: 0 0 24px 0;
+      text-transform: uppercase;
+      text-shadow: 0 0 60px var(--primary-glow);
+    }
+
+    .logo-container {
+      position: absolute;
+      top: 60px;
+      left: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-svg {
+      width: 48px;
+      height: 48px;
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--text-hi);
+    }
+
+    .metric-badge {
+      position: absolute;
+      bottom: 60px;
+      right: 80px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-16);
+      padding: 16px 28px;
+      backdrop-filter: var(--blur-glass);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .metric-val {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .metric-lbl {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-low);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mesh Background -->
+  <div class="background"></div>
+  <div class="grid-overlay"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Center Glow -->
+  <div class="bg-glow"></div>
+
+  <!-- Corner Logo -->
+  <div class="logo-container">
+    <svg class="logo-svg" viewBox="0 0 512 512">
+      <defs>
+        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="var(--primary, #3b82f6)" />
+          <stop offset="100%" stop-color="var(--accent, #22c55e)" />
+        </linearGradient>
+      </defs>
+      <circle cx="256" cy="256" r="220" fill="none" stroke="url(#logoGrad)" stroke-width="20" />
+      <ellipse cx="256" cy="340" rx="90" ry="35" fill="none" stroke="url(#logoGrad)" stroke-width="15" />
+      <path d="M190,195 L190,340 A66,25 0 0,0 322,340 L322,195 A66,25 0 0,0 190,195 Z" fill="url(#logoGrad)" />
+    </svg>
+    <span class="logo-text">SILO</span>
+  </div>
+
+  <!-- Content -->
+  <div class="container">
+    <span class="kicker">TEE SECURE DROP</span>
+    <h1 class="main-title">THE ANONYMOUS<br><span class="text-gradient">WHISTLEBLOWER</span></h1>
+    <p class="sub-hook">Verify insider identity and leak forensic documents inside a secure enclave. Absolute identity shielding for sources.</p>
+  </div>
+
+  <!-- Metric Badge -->
+  <div class="metric-badge">
+    <span class="metric-val">100% SECURE</span>
+    <span class="metric-lbl">IN-ENCLAVE ROUTING</span>
+  </div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Silo — Devpost Gallery Diagram</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./_asset-utilities.css">
+  <style>
+    body {
+      width: 1200px;
+      height: 800px;
+      position: relative;
+      font-family: var(--font-ui);
+      background-color: var(--bg-base);
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      padding: 60px 80px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 20px;
+    }
+
+    .title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-hi);
+    }
+
+    .subtitle {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .canvas {
+      flex-grow: 1;
+      position: relative;
+      margin: 40px 0;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-24);
+      background: rgba(255,255,255,0.01);
+      overflow: hidden;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 40px;
+    }
+
+    .node {
+      width: 220px;
+      height: 240px;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .node-header {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .node-icon {
+      width: 60px;
+      height: 60px;
+      fill: none;
+      stroke: var(--text-hi);
+      stroke-width: 1.5;
+      margin: 16px 0;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+    }
+
+    .node-desc {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-mid);
+      line-height: 1.4;
+    }
+
+    .connector-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      opacity: 0.4;
+      z-index: 1;
+    }
+
+    .conn-1 {
+      width: 14%;
+      left: 26%;
+      top: 50%;
+    }
+
+    .conn-2 {
+      width: 14%;
+      left: 58%;
+      top: 50%;
+    }
+
+    .flow-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--primary);
+      top: -2px;
+      animation: flow 3s infinite linear;
+    }
+
+    .flow-dot-2 {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      top: -2px;
+      animation: flow 3s infinite linear;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes flow {
+      0% {
+        left: 0%;
+      }
+      100% {
+        left: 100%;
+      }
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-low);
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="background"></div>
+  <div class="grid-overlay"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="header">
+      <h2 class="title">SECURE WHISTLEBLOWER DROP PIPELINE</h2>
+      <span class="subtitle">Zero-Knowledge Insider Verifications</span>
+    </div>
+
+    <!-- Diagram Canvas -->
+    <div class="canvas">
+      <!-- Connector 1 -->
+      <div class="connector-line conn-1">
+        <div class="flow-dot"></div>
+      </div>
+      
+      <!-- Connector 2 -->
+      <div class="connector-line conn-2">
+        <div class="flow-dot-2"></div>
+      </div>
+
+      <!-- Node 1: Whistleblower -->
+      <div class="node glass-panel">
+        <span class="node-header">1. Whistleblower</span>
+        <svg class="node-icon" viewBox="0 0 24 24" stroke="var(--primary)">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span class="node-desc">
+          Uploads PDF leaks<br>
+          Enters phone OTP<br>
+          Encrypts metadata<br>
+          using TEE public key
+        </span>
+      </div>
+
+      <!-- Node 2: TEE Enclave -->
+      <div class="node glass-panel" style="border-color: rgba(59, 130, 246, 0.2);">
+        <span class="node-header" style="color: var(--primary);">2. TEE Enclave</span>
+        <svg class="node-icon" viewBox="0 0 24 24" stroke="var(--primary)">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span class="node-desc">
+          Verifies OTP code<br>
+          Stores PDF in Stash<br>
+          Computes SHA-256<br>
+          Issues SD-JWT VC
+        </span>
+      </div>
+
+      <!-- Node 3: Journalist -->
+      <div class="node glass-panel" style="border-color: rgba(34, 197, 94, 0.2);">
+        <span class="node-header" style="color: var(--accent);">3. Journalist Inbox</span>
+        <svg class="node-icon" viewBox="0 0 24 24" stroke="var(--accent)">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span class="node-desc">
+          Sees Verified badge<br>
+          Tamper-check signature<br>
+          Replies via TEE<br>
+          blind contact relay
+        </span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>SILO ARCHITECTURE MATRIX</span>
+      <span>TEE SECURE DATA DISPATCH & CONTROL</span>
+    </div>
+  </div>
+</body>
+</html>

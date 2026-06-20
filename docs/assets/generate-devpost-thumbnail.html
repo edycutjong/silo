@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Silo — Devpost Thumbnail Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./_asset-utilities.css">
+  <style>
+    body {
+      width: 1200px;
+      height: 800px;
+      position: relative;
+      background-color: var(--bg-base);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Override background to make it more vibrant for the small grid thumbnail */
+    .background {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, 
+                    color-mix(in srgb, var(--primary) 45%, transparent) 0%, 
+                    color-mix(in srgb, var(--accent) 30%, transparent) 50%, 
+                    var(--bg-base) 100%);
+      z-index: -2;
+    }
+
+    .icon-wrapper {
+      width: 340px;
+      height: 340px;
+      margin-bottom: 40px;
+      filter: drop-shadow(0 0 50px var(--primary-glow));
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .project-name {
+      font-family: var(--font-display);
+      font-size: 112px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 0;
+      text-shadow: 0 0 40px var(--primary-glow);
+    }
+
+    .hackathon-tag {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-low);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-top: 24px;
+      border: 1px solid var(--border-subtle);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      background: rgba(0,0,0,0.2);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-12px) rotate(1deg);
+      }
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Vibrant Background -->
+  <div class="background"></div>
+  <div class="grid-overlay"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Icon Mark (35-45% of Canvas Height) -->
+  <div class="icon-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+      <defs>
+        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#3b82f6" />
+          <stop offset="100%" stop-color="#22c55e" />
+        </linearGradient>
+        <linearGradient id="innerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="rgba(59, 130, 246, 0.15)" />
+          <stop offset="100%" stop-color="rgba(34, 197, 94, 0.02)" />
+        </linearGradient>
+        <filter id="devpostGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="16" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+      <circle cx="256" cy="256" r="220" fill="none" stroke="url(#logoGrad)" stroke-width="4" opacity="0.3" stroke-dasharray="16 8" />
+      <polygon points="256,60 420,155 420,345 256,440 92,345 92,155" fill="url(#innerGrad)" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+      <ellipse cx="256" cy="360" rx="90" ry="35" fill="url(#logoGrad)" opacity="0.2" filter="url(#devpostGlow)" />
+      <path d="M166,180 L166,360 A90,35 0 0,0 346,360 L346,180 A90,35 0 0,0 166,180 Z" fill="url(#innerGrad)" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+      <path d="M190,195 L190,345 A66,25 0 0,0 322,345 L322,195 A66,25 0 0,0 190,195 Z" fill="url(#logoGrad)" filter="url(#devpostGlow)" opacity="0.8" />
+      <g transform="translate(256,260)">
+        <path d="M-20,-10 L20,-10 L15,20 L0,30 L-15,20 Z" fill="#090e1a" stroke="url(#logoGrad)" stroke-width="2" />
+        <path d="M-12,-10 L-12,-22 A12,12 0 0,1 12,-22 L12,-10" fill="none" stroke="url(#logoGrad)" stroke-width="2" />
+        <path d="M-6,7 L-2,11 L6,3" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <circle cx="256" cy="110" r="6" fill="#22c55e" filter="url(#devpostGlow)" />
+      <circle cx="210" cy="130" r="4" fill="#3b82f6" opacity="0.7" />
+      <circle cx="302" cy="125" r="5" fill="#3b82f6" opacity="0.8" />
+    </svg>
+  </div>
+
+  <!-- Project Name -->
+  <h1 class="project-name text-gradient">SILO</h1>
+
+  <!-- Small Version Tag -->
+  <span class="hackathon-tag">T3 ADK Bounty</span>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Silo — Visual Assets Sanity Check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./_asset-utilities.css">
+  <style>
+    body {
+      padding: 40px;
+      box-sizing: border-box;
+      background-color: var(--bg-base);
+      color: var(--text-hi);
+      font-family: var(--font-ui);
+      overflow-y: auto;
+    }
+
+    .cors-warning {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-12);
+      padding: 16px 24px;
+      color: #ef4444;
+      font-weight: 600;
+      margin-bottom: 32px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+
+    .title-area {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 24px;
+    }
+
+    h1 {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      margin: 0 0 8px 0;
+      color: var(--primary);
+    }
+
+    p {
+      color: var(--text-mid);
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-20);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .frame-wrap {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-12);
+      background-color: #020617;
+    }
+
+    iframe {
+      border: 0;
+    }
+
+    .checklist-row {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-mid);
+    }
+
+    /* Icon grid section */
+    .icon-preview-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 32px;
+      padding: 20px;
+      background: #020617;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-12);
+    }
+
+    .icon-label-pair {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-lbl {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-low);
+    }
+  </style>
+</head>
+<body>
+  <div class="cors-warning">
+    ⚠️ Iframes won't load over file://. Run <code>npm run preview</code> and open the served URL.
+  </div>
+
+  <div class="title-area">
+    <h1>SILO ASSET CONSOLE</h1>
+    <p>Sanity checking the cohesive 6-asset design system tokens & visuals</p>
+  </div>
+
+  <div class="grid">
+    <!-- OG Image -->
+    <div class="card">
+      <div class="card-title">
+        <span>generate-og-image.html</span>
+        <span>1200 &times; 630</span>
+      </div>
+      <div class="frame-wrap" style="aspect-ratio: 1200/630;">
+        <iframe src="./generate-og-image.html" style="width: 1200px; height: 630px; transform: scale(calc(100% / 1200)); transform-origin: top left; position: absolute; top: 0; left: 0;"></iframe>
+      </div>
+      <div class="checklist-row">
+        <span>&check; legible at thumb-size?</span>
+      </div>
+    </div>
+
+    <!-- YouTube Thumbnail -->
+    <div class="card">
+      <div class="card-title">
+        <span>generate-youtube-thumbnail.html</span>
+        <span>1280 &times; 720</span>
+      </div>
+      <div class="frame-wrap" style="aspect-ratio: 1280/720;">
+        <iframe src="./generate-youtube-thumbnail.html" style="width: 1280px; height: 720px; transform: scale(calc(100% / 1280)); transform-origin: top left; position: absolute; top: 0; left: 0;"></iframe>
+      </div>
+      <div class="checklist-row">
+        <span>&check; message lands at 200px wide?</span>
+      </div>
+    </div>
+
+    <!-- Devpost Thumbnail -->
+    <div class="card">
+      <div class="card-title">
+        <span>generate-devpost-thumbnail.html</span>
+        <span>1200 &times; 800</span>
+      </div>
+      <div class="frame-wrap" style="aspect-ratio: 1200/800;">
+        <iframe src="./generate-devpost-thumbnail.html" style="width: 1200px; height: 800px; transform: scale(calc(100% / 1200)); transform-origin: top left; position: absolute; top: 0; left: 0;"></iframe>
+      </div>
+      <div class="checklist-row">
+        <span>&check; premium SaaS feel?</span>
+      </div>
+    </div>
+
+    <!-- Devpost Gallery -->
+    <div class="card">
+      <div class="card-title">
+        <span>generate-devpost-gallery.html</span>
+        <span>1200 &times; 800</span>
+      </div>
+      <div class="frame-wrap" style="aspect-ratio: 1200/800;">
+        <iframe src="./generate-devpost-gallery.html" style="width: 1200px; height: 800px; transform: scale(calc(100% / 1200)); transform-origin: top left; position: absolute; top: 0; left: 0;"></iframe>
+      </div>
+      <div class="checklist-row">
+        <span>&check; diagram tells a story?</span>
+      </div>
+    </div>
+
+    <!-- README Hero -->
+    <div class="card">
+      <div class="card-title">
+        <span>generate-readme-hero.html</span>
+        <span>1280 &times; 640</span>
+      </div>
+      <div class="frame-wrap" style="aspect-ratio: 1280/640;">
+        <iframe src="./generate-readme-hero.html" style="width: 1280px; height: 640px; transform: scale(calc(100% / 1280)); transform-origin: top left; position: absolute; top: 0; left: 0;"></iframe>
+      </div>
+      <div class="checklist-row">
+        <span>&check; reads well at 1280px?</span>
+      </div>
+    </div>
+
+    <!-- README Hero (GitHub Column Simulation) -->
+    <div class="card">
+      <div class="card-title">
+        <span>generate-readme-hero.html (GitHub 1012px simulation)</span>
+        <span>1012 &times; 506</span>
+      </div>
+      <div class="frame-wrap" style="aspect-ratio: 1012/506;">
+        <iframe src="./generate-readme-hero.html" style="width: 1280px; height: 640px; transform: scale(calc(1012 / 1280)); transform-origin: top left; position: absolute; top: 0; left: 0;"></iframe>
+      </div>
+      <div class="checklist-row">
+        <span>&check; legible at 1012px GitHub column?</span>
+      </div>
+    </div>
+
+    <!-- Icon previews -->
+    <div class="card" style="grid-column: span 2;">
+      <div class="card-title">
+        <span>icon.svg</span>
+        <span>Multiple sizes preview</span>
+      </div>
+      <div class="icon-preview-row">
+        <div class="icon-label-pair">
+          <img src="./icon.svg" style="width: 256px; height: 256px;" alt="Icon 256x256">
+          <span class="icon-lbl">256 &times; 256</span>
+        </div>
+        
+        <div class="icon-label-pair">
+          <img src="./icon.svg" style="width: 128px; height: 128px;" alt="Icon 128x128">
+          <span class="icon-lbl">128 &times; 128</span>
+        </div>
+
+        <div class="icon-label-pair">
+          <img src="./icon.svg" style="width: 64px; height: 64px;" alt="Icon 64x64">
+          <span class="icon-lbl">64 &times; 64</span>
+        </div>
+
+        <div class="icon-label-pair">
+          <img src="./icon.svg" style="width: 32px; height: 32px;" alt="Icon 32x32">
+          <span class="icon-lbl">32 &times; 32 (Favicon)</span>
+        </div>
+      </div>
+      <div class="checklist-row">
+        <span>&check; recognizable and clean at 32&times;32?</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
