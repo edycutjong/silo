@@ -1,4 +1,6 @@
+#![allow(non_snake_case)]
 use serde::{Deserialize, Serialize};
+
 use std::slice;
 use sha2::{Sha256, Digest};
 use base64::{Engine as _, engine::general_purpose};

@@ -1,0 +1,24 @@
+{
+  "name": "@edycutjong/silo-cli",
+  "version": "1.0.0",
+  "description": "Silo Command Line Interface for Whistleblower Submissions",
+  "main": "dist/index.js",
+  "bin": {
+    "silo": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "@types/jest": "^29.5.12"
+  }
+}

@@ -1,4 +1,5 @@
 .PHONY: help bootstrap build test lint typecheck ci e2e lighthouse security-scan check-readiness verify-offline
+.PHONY: build-contract build-agent build-ui build-cli test-contract test-agent test-ui test-cli
 
 help:
 	@echo "Silo Build and Testing Automation Harness"
@@ -21,8 +22,32 @@ bootstrap:
 build:
 	npm run build
 
+build-contract:
+	npm run build:contract
+
+build-agent:
+	npm run build:agent
+
+build-ui:
+	npm run build:ui
+
+build-cli:
+	npm run build:cli
+
 test:
 	npm run test
+
+test-contract:
+	npm run test:contract
+
+test-agent:
+	npm run test:agent
+
+test-ui:
+	npm run test:ui
+
+test-cli:
+	npm run test:cli
 
 lint:
 	npm run lint
@@ -30,7 +55,7 @@ lint:
 typecheck:
 	npm run typecheck
 
-ci:
+ci: build-contract
 	npm run ci
 
 e2e:
