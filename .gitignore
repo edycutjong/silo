@@ -44,4 +44,4 @@ yarn-error.log*
 .idea/
 .gemini/
 
-docs/assets/*.png
+docs/assets
