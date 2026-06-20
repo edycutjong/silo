@@ -1,0 +1,8 @@
+[
+  {
+    "id": "newsroom-main",
+    "host": "https://newsroom.sandbox.test",
+    "path": "/inbox/submit",
+    "method": "POST"
+  }
+]

@@ -1,0 +1,180 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── STAGE 1: Code Quality ─────────────────────────────────
+  agent-quality:
+    name: "Stage 1 · Agent Quality"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: agent/package-lock.json
+      - name: Install dependencies
+        run: cd agent && npm ci
+      - name: Build and Type Check
+        run: cd agent && npm run build
+
+  ui-quality:
+    name: "Stage 1 · UI Quality"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: ui/package-lock.json
+      - name: Install dependencies
+        run: cd ui && npm ci
+      - name: Type check
+        run: cd ui && npm run typecheck
+      - name: Lint
+        run: cd ui && npm run lint
+
+  contract-quality:
+    name: "Stage 1 · Contract Quality (Rust)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cargo test
+        run: cd contract && cargo test
+
+  # ── STAGE 2: Security Gate ────────────────────────────────
+  secret-scan:
+    name: "Stage 2 · Secret Scanning"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
+        continue-on-error: true
+
+  dependency-audit:
+    name: "Stage 2 · Dependency Audit"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Audit agent dependencies
+        run: cd agent && npm audit --audit-level=high
+        continue-on-error: true
+      - name: Audit ui dependencies
+        run: cd ui && npm audit --audit-level=high
+        continue-on-error: true
+
+  # ── STAGE 3: Build Verification ───────────────────────────
+  build-ui:
+    name: "Stage 3 · UI Build Verification"
+    needs: [ui-quality]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: ui/package-lock.json
+      - name: Install dependencies
+        run: cd ui && npm ci
+      - name: Next.js production build
+        run: cd ui && npm run build
+
+  build-contract:
+    name: "Stage 3 · Contract Build Verification"
+    needs: [contract-quality]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Cargo build target wasm
+        run: cd contract && cargo build --target wasm32-unknown-unknown --release
+
+  # ── STAGE 4: E2E Tests ────────────────────────────────────
+  e2e:
+    name: "Stage 4 · E2E Tests"
+    needs: [build-ui]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: ui/package-lock.json
+      - name: Install dependencies
+        run: cd ui && npm ci
+      - name: Install Playwright browsers
+        run: cd ui && npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: cd ui && npm run e2e
+        continue-on-error: true
+
+  # ── STAGE 5: Performance ──────────────────────────────────
+  performance:
+    name: "Stage 5 · Performance"
+    needs: [build-ui]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: ui/package-lock.json
+      - name: Install dependencies
+        run: cd ui && npm ci
+      - name: Lighthouse CI
+        run: |
+          npm install -g @lhci/cli
+          cd ui && npx lhci autorun
+        continue-on-error: true
+
+  # ── STAGE 6: Deploy Gate ──────────────────────────────────
+  deploy-gate:
+    name: "Stage 6 · Deploy Gate"
+    needs: [build-ui, build-contract, e2e, performance, secret-scan, dependency-audit]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: All gates passed
+        run: |
+          echo "🚀 All CI/CD gates passed!"

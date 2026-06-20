@@ -1,0 +1,10 @@
+{
+  "did:t3n:whistleblower123": {
+    "first_name": "Anonymous",
+    "verified_contacts": {
+      "email": {
+        "value": "whistleblower@hospital-safety.org"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Brand Gradient -->
+    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#00f0ff"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#070a13" rx="96"/>
+
+  <!-- Outer Hashing Rings -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="url(#brandGrad)" stroke-width="3" stroke-dasharray="20 10" opacity="0.3"/>
+  <circle cx="256" cy="256" r="195" fill="none" stroke="#00f0ff" stroke-width="2" stroke-dasharray="40 20" opacity="0.15"/>
+
+  <!-- Enclave Shield Boundary -->
+  <path d="M 256 110 L 376 150 V 270 C 376 350, 316 410, 256 430 C 196 410, 136 350, 136 270 V 150 Z" fill="none" stroke="url(#brandGrad)" stroke-width="6" opacity="0.35"/>
+
+  <!-- Central Secure Lock / Drop Target -->
+  <g filter="url(#neonGlow)" transform-origin="256px 256px">
+    <!-- Glowing Inner Shield -->
+    <path d="M 256 140 L 340 170 V 260 C 340 320, 298 370, 256 390 C 214 370, 172 320, 172 260 V 170 Z" fill="none" stroke="url(#brandGrad)" stroke-width="8"/>
+    
+    <!-- Shield Core / Lock Plate -->
+    <circle cx="256" cy="245" r="30" fill="#070a13" stroke="url(#brandGrad)" stroke-width="4"/>
+    
+    <!-- Keyhole -->
+    <path d="M 256 230 C 248 230, 242 236, 242 244 C 242 250, 246 255, 251 257 L 247 275 H 265 L 261 257 C 266 255, 270 250, 270 244 C 270 236, 264 230, 256 230 Z" fill="url(#brandGrad)"/>
+
+    <!-- Secure Dot Indicators -->
+    <circle cx="256" cy="185" r="4" fill="#00f0ff"/>
+    <circle cx="210" cy="260" r="4" fill="#00f0ff"/>
+    <circle cx="302" cy="260" r="4" fill="#00f0ff"/>
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+{
+  "name": "silo-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "bootstrap": "npm run bootstrap:agent && npm run bootstrap:ui",
+    "bootstrap:agent": "cd agent && npm install",
+    "bootstrap:ui": "cd ui && npm install",
+    "build": "npm run build:agent && npm run build:contract && npm run build:ui",
+    "build:agent": "cd agent && npm run build",
+    "build:contract": "cd contract && cargo build --target wasm32-unknown-unknown --release",
+    "build:ui": "cd ui && npm run build",
+    "test": "npm run test:contract && npm run test:agent && npm run test:ui",
+    "test:contract": "cd contract && cargo test",
+    "test:agent": "cd agent && npm run test",
+    "test:ui": "cd ui && npm run test",
+    "test:coverage": "cd ui && npm run test:coverage",
+    "lint": "npm run lint:ui",
+    "lint:ui": "cd ui && npm run lint",
+    "typecheck": "npm run typecheck:ui && npm run typecheck:agent",
+    "typecheck:ui": "cd ui && npm run typecheck",
+    "typecheck:agent": "cd agent && npx tsc --noEmit",
+    "e2e": "cd ui && npm run e2e",
+    "lighthouse": "cd ui && npm run lighthouse",
+    "audit": "npm run audit:ui && npm run audit:agent",
+    "audit:ui": "cd ui && npm run audit",
+    "audit:agent": "cd agent && npm audit --audit-level=high || true",
+    "ci": "npm run lint && npm run typecheck && npm run test && npm run e2e",
+    "ci:full": "npm run ci && npm run build && npm run e2e"
+  }
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silo Pitch Deck</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-display { font-family: 'Outfit', sans-serif; }
+    .slide { display: none; }
+    .slide.active { display: flex; }
+    .code-font { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 h-full overflow-hidden flex flex-col justify-between">
+  <!-- Slide Container -->
+  <div class="flex-1 flex items-center justify-center p-6 relative">
+    
+    <!-- Slide 1: Title & Hook -->
+    <div class="slide active max-w-5xl w-full flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 01 // Introduction</span>
+        <h1 class="text-7xl font-black tracking-tighter leading-none mb-6">
+          SILO <span class="text-cyan-400">.</span>
+        </h1>
+        <h2 class="text-2xl text-zinc-400 font-semibold mb-6">Hand Over Proof. Stay Invisible.</h2>
+        <p class="text-zinc-500 text-base max-w-md">
+          A zero-knowledge whistleblower drop built on Terminal 3's secure enclave. Decoupling evidence credibility from reporter identity.
+        </p>
+      </div>
+      <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-2xl p-8 max-w-md w-full relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-2xl"></div>
+        <span class="text-[10px] font-mono text-zinc-500 block mb-2 uppercase">Secure Boundary Status</span>
+        <div class="h-2 w-full bg-zinc-800 rounded-full overflow-hidden mb-4">
+          <div class="h-full bg-cyan-400 w-full animate-pulse"></div>
+        </div>
+        <p class="text-[11px] text-cyan-400 code-font leading-relaxed">
+          did:t3n:silo-enclave-authority verified
+        </p>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 02 // The Problem</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Anonymity is Broken in Web2 Leaks</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="p-6 bg-zinc-900/50 border border-zinc-900 rounded-xl">
+          <h3 class="text-xl font-bold text-red-500 mb-3">Identity Leaks</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            Every standard upload form logs IP addresses, browser fingerprints, and request payloads, leaving a clear path to the whistleblower.
+          </p>
+        </div>
+        <div class="p-6 bg-zinc-900/50 border border-zinc-900 rounded-xl">
+          <h3 class="text-xl font-bold text-red-500 mb-3">OTP Trap</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            Verifying that a source controls a real, domain-specific contact details (Insider verification) traditionally logs their plaintext phone/email.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: The Solution -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 03 // The Solution</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Hardware-Airgapped Credibility</h2>
+      <p class="text-zinc-400 text-lg leading-relaxed max-w-3xl mb-8">
+        Silo moves the entire dropping and verification logic into a **secure hardware enclave**. Plaintext PII is used inside the TEE to send OTP codes and verify integrity, but *never* hits databases, logs, or agent memory.
+      </p>
+      <div class="flex items-center gap-6">
+        <span class="px-4 py-2 bg-cyan-950 border border-cyan-800 text-cyan-400 rounded-full text-xs font-mono">100% Enclave Verification</span>
+        <span class="px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-400 rounded-full text-xs font-mono">Zero PII Logs</span>
+      </div>
+    </div>
+
+    <!-- Slide 4: Core Product Flow -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 04 // Core Product Flow</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">How Silo Operates</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="p-5 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-cyan-400 font-bold mb-2">01. DROP</div>
+          <p class="text-zinc-500 text-xs leading-relaxed">Evidence PDF is uploaded and hashed directly inside the enclave.</p>
+        </div>
+        <div class="p-5 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-cyan-400 font-bold mb-2">02. OTP CHALLENGE</div>
+          <p class="text-zinc-500 text-xs leading-relaxed">Whistleblower receives an SMS OTP code generated by T3.</p>
+        </div>
+        <div class="p-5 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-cyan-400 font-bold mb-2">03. MANIFEST SIGN</div>
+          <p class="text-zinc-500 text-xs leading-relaxed">Enclave verifies code, signs report manifest VC, and clears OTP.</p>
+        </div>
+        <div class="p-5 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-cyan-400 font-bold mb-2">04. DISPATCH</div>
+          <p class="text-zinc-500 text-xs leading-relaxed">Report dispatches to media outbox via blind relay placeholder.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Technical Architecture -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 05 // Technical Architecture</span>
+      <h2 class="text-5xl font-black tracking-tight mb-6">Stacked Host Enclave APIs</h2>
+      <p class="text-zinc-400 text-sm mb-6 leading-relaxed max-w-2xl">
+        Built as a Rust WASM contract compiled for `wasm32-unknown-unknown` running inside Terminal 3's secure enclave context.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 code-font text-xs">
+        <div class="p-4 bg-zinc-900 rounded-lg"><div class="text-cyan-400 mb-1">stash</div>Secure storage upload</div>
+        <div class="p-4 bg-zinc-900 rounded-lg"><div class="text-cyan-400 mb-1">otp</div>Blind contact verification</div>
+        <div class="p-4 bg-zinc-900 rounded-lg"><div class="text-cyan-400 mb-1">http-placeholders</div>Blind relayed threads</div>
+        <div class="p-4 bg-zinc-900 rounded-lg"><div class="text-cyan-400 mb-1">signing</div>DID signed manifest VC</div>
+      </div>
+    </div>
+
+    <!-- Slide 6: Live Demo Highlights -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 06 // Live Demo Highlights</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Journalist Console & Blind Chat</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <ul class="space-y-4 text-zinc-400 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-cyan-400">✔</span>
+              <span><strong>Verified Human Badge:</strong> Clear emerald badge confirms T3 enclave identity check.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cyan-400">✔</span>
+              <span><strong>Integrity Check:</strong> Red alert flashes immediately if a file is tampered.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cyan-400">✔</span>
+              <span><strong>Relayed Chat:</strong> Real-time two-way egress relay hides source email.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-zinc-900 p-6 border border-zinc-800 rounded-xl code-font text-xs">
+          <div class="text-green-500 mb-2">● VERIFIED HUMAN (T3 VC SIGNED)</div>
+          <div class="text-zinc-500 mb-4">Report: drop-165-6446</div>
+          <div class="bg-zinc-950 p-4 border border-zinc-800 rounded">
+            <div class="text-cyan-400">Message from Source #7:</div>
+            <div class="text-zinc-300">"Here are the safety inspection logs."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Sponsor Integration -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 07 // Sponsor Integration</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Maximizing Terminal 3 ADK</h2>
+      <p class="text-zinc-400 leading-relaxed max-w-3xl mb-6">
+        Silo integrates **6 distinct Host API methods** from the Terminal 3 SDK, demonstrating true system architecture leverage.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-zinc-400">
+        <div>
+          <h4 class="font-bold text-white mb-2">1. Secure Hashing</h4>
+          <p class="text-xs">Evidence PDFs are hashed natively in Rust within the secure enclave boundary.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-2">2. OTP Decoupling</h4>
+          <p class="text-xs">Insiders verify their credentials blindly without storing SMS/Email value.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-white mb-2">3. Egress Relays</h4>
+          <p class="text-xs">HTTP outbox calls mask source details, filtering outgoing threads via host variables.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Competitive Edge -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 08 // Competitive Edge</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Silo vs. Standard Leaks</h2>
+      <div class="overflow-x-auto w-full">
+        <table class="w-full text-left border-collapse text-sm text-zinc-400">
+          <thead>
+            <tr class="border-b border-zinc-800 text-white">
+              <th class="py-3">Feature</th>
+              <th class="py-3 text-cyan-400">Silo</th>
+              <th class="py-3">SecureDrop</th>
+              <th class="py-3">Web2 Forms</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-zinc-900">
+              <td class="py-3 font-semibold text-white">Enclave Boundary Verification</td>
+              <td class="py-3 text-cyan-400">Yes (T3)</td>
+              <td class="py-3">No</td>
+              <td class="py-3">No</td>
+            </tr>
+            <tr class="border-b border-zinc-900">
+              <td class="py-3 font-semibold text-white">Zero plain-PII local logs</td>
+              <td class="py-3 text-cyan-400">Yes</td>
+              <td class="py-3">No</td>
+              <td class="py-3">No</td>
+            </tr>
+            <tr class="border-b border-zinc-900">
+              <td class="py-3 font-semibold text-white">Two-way chat relay</td>
+              <td class="py-3 text-cyan-400">Yes (Blind Egress)</td>
+              <td class="py-3">Complex</td>
+              <td class="py-3">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 9: Product Roadmap -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 09 // Roadmap</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Silo 30/60/90-Day Execution</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-sm font-bold text-white mb-2">30 Days // Media Stream</div>
+          <p class="text-zinc-400 text-xs">Direct enclave chunking for large video, audio, and documents streaming.</p>
+        </div>
+        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-sm font-bold text-white mb-2">60 Days // ZK Escrows</div>
+          <p class="text-zinc-400 text-xs">Financial whistleblower rewards distributed via zero-knowledge escrow payees.</p>
+        </div>
+        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+          <div class="text-sm font-bold text-white mb-2">90 Days // Mobile SDKs</div>
+          <p class="text-zinc-400 text-xs">Air-gapped drop frameworks embedded natively into iOS/Android mobile clients.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Engineering Rigor -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 10 // Engineering Rigor</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">Robust Test & Benchmark Metrics</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-xl text-center">
+          <div class="text-4xl font-black text-cyan-400 mb-2">46</div>
+          <div class="text-zinc-500 text-xs uppercase font-mono">Total Test cases</div>
+        </div>
+        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-xl text-center">
+          <div class="text-4xl font-black text-cyan-400 mb-2">41.29 ms</div>
+          <div class="text-zinc-500 text-xs uppercase font-mono">Mean Enclave Latency</div>
+        </div>
+        <div class="p-6 bg-zinc-900 border border-zinc-800 rounded-xl text-center">
+          <div class="text-4xl font-black text-cyan-400 mb-2">100%</div>
+          <div class="text-zinc-500 text-xs uppercase font-mono">Offline Audit Pass</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: Team -->
+    <div class="slide max-w-5xl w-full flex-col text-left">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 11 // Team</span>
+      <h2 class="text-5xl font-black tracking-tight mb-8">The Silo Builders</h2>
+      <p class="text-zinc-400 text-lg max-w-2xl leading-relaxed mb-6">
+        Web3 security researchers and systems engineers dedicated to creating private, credible communication boundaries.
+      </p>
+      <div class="flex gap-4">
+        <div class="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded text-xs font-mono text-zinc-400">Secure Enclaves</div>
+        <div class="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded text-xs font-mono text-zinc-400">Zero Knowledge</div>
+        <div class="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded text-xs font-mono text-zinc-400">Rust System Dev</div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Ask / Conclusion -->
+    <div class="slide max-w-5xl w-full flex-col items-center justify-center text-center">
+      <span class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">Slide 12 // Conclusion</span>
+      <h1 class="text-6xl font-black tracking-tighter mb-6">Hand Over Proof. Stay Invisible.</h1>
+      <p class="text-zinc-400 max-w-md mx-auto mb-8">
+        Protect those who protect the truth. Join us in building Silo.
+      </p>
+      <div class="text-xs font-mono text-cyan-400">github.com/silo-drop</div>
+    </div>
+
+  </div>
+
+  <!-- Navigation Footer Controls -->
+  <footer class="h-16 border-t border-zinc-900 bg-zinc-950/80 backdrop-blur-lg flex items-center justify-between px-8 z-10 shrink-0">
+    <div class="text-[10px] font-mono text-zinc-600 uppercase">
+      Silo Pitch Deck · Terminal 3 Enclave
+    </div>
+    <div class="flex items-center gap-4">
+      <button onclick="prevSlide()" class="px-4 py-1.5 border border-zinc-800 hover:border-zinc-700 rounded-lg text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-all select-none">PREV</button>
+      <span id="slide-num" class="text-xs font-mono text-cyan-400">1 / 12</span>
+      <button onclick="nextSlide()" class="px-4 py-1.5 border border-zinc-800 hover:border-zinc-700 rounded-lg text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-all select-none">NEXT</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const slideNum = document.getElementById('slide-num');
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+      slideNum.textContent = `${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlides();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+    });
+  </script>
+</body>
+</html>

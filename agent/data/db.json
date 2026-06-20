@@ -1,0 +1,24 @@
+{
+  "kv": {},
+  "profiles": {
+    "did:t3n:whistleblower123": {
+      "first_name": "undefined",
+      "verified_contacts": {
+        "email": {
+          "value": "undefined"
+        }
+      }
+    }
+  },
+  "mediaOutlets": [
+    {
+      "id": "newsroom-main",
+      "host": "https://newsroom.sandbox.test",
+      "path": "/inbox/submit",
+      "method": "POST"
+    }
+  ],
+  "dispatchedReports": [],
+  "stash": {},
+  "activeOtp": null
+}
