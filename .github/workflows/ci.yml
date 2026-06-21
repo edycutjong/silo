@@ -203,11 +203,15 @@ jobs:
         run: npm install --global @railway/cli
 
       - name: Deploy UI to Railway
-        run: railway up --service silo-ui --ci
+        run: |
+          CLEANED_TOKEN=$(echo -n "$RAILWAY_TOKEN" | tr -d '\r\n ')
+          RAILWAY_TOKEN="$CLEANED_TOKEN" railway up --service silo-ui --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
       - name: Deploy Agent to Railway
-        run: railway up --service silo-agent --ci
+        run: |
+          CLEANED_TOKEN=$(echo -n "$RAILWAY_TOKEN" | tr -d '\r\n ')
+          RAILWAY_TOKEN="$CLEANED_TOKEN" railway up --service silo-agent --ci
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
