@@ -14,6 +14,17 @@
   "dependencies": {
     "commander": "^12.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edycutjong/silo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edycutjong/silo/issues"
+  },
+  "homepage": "https://github.com/edycutjong/silo#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "@types/node": "^20.0.0",
