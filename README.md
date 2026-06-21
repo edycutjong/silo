@@ -10,6 +10,7 @@
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://silo.edycu.dev)
   [![Agent API](https://img.shields.io/badge/🤖_Agent-API-06b6d4?style=for-the-badge)](https://agent.silo.edycu.dev)
   [![Pitch Video](https://img.shields.io/badge/🎬_Pitch-Video-ef4444?style=for-the-badge)](https://youtu.be/dummy-silo-pitch-demo-url)
+  [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://silo.edycu.dev/pitch.html)
   [![Sponsor Challenge](https://img.shields.io/badge/DoraHacks-Terminal_3_Bounty-8b5cf6?style=for-the-badge)](https://dorahacks.io/hackathon/t3adkdevchallenge)
 
   <br/>

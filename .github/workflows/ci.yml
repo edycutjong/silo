@@ -178,3 +178,40 @@ jobs:
       - name: All gates passed
         run: |
           echo "🚀 All CI/CD gates passed!"
+
+  # ── STAGE 7: Deploy to Railway (main only) ────────────────
+  deploy-railway:
+    name: "Stage 7 · Deploy to Railway"
+    needs: [deploy-gate]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: |
+            agent/package-lock.json
+            cli/package-lock.json
+            ui/package-lock.json
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli
+
+      - name: Deploy UI to Railway
+        run: |
+          CLEANED_TOKEN=$(echo -n "$RAILWAY_TOKEN" | tr -d '\r\n ')
+          RAILWAY_TOKEN="$CLEANED_TOKEN" railway up --service silo-ui --ci
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy Agent to Railway
+        run: |
+          CLEANED_TOKEN=$(echo -n "$RAILWAY_TOKEN" | tr -d '\r\n ')
+          RAILWAY_TOKEN="$CLEANED_TOKEN" railway up --service silo-agent --ci
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

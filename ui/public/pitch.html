@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silo — Pitch Deck</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-display {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Force-hide inactive slides. */
+    .slide {
+      display: none !important;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.99);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide.active {
+      display: flex !important;
+      animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .glass-panel {
+      background: rgba(18, 20, 26, 0.45);
+      border: 1px solid rgba(255, 159, 10, 0.05);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+    }
+
+    .glass-card-hover:hover {
+      border-color: rgba(255, 159, 10, 0.3);
+      box-shadow: 0 0 25px rgba(255, 159, 10, 0.05);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body class="bg-[#06070a] text-slate-100 h-full overflow-hidden flex flex-col justify-between select-none">
+  <!-- Top Bar -->
+  <header
+    class="h-16 border-b border-white/5 bg-[#06070a]/80 backdrop-blur-lg flex items-center justify-between px-8 z-10 shrink-0">
+    <div class="flex items-center gap-3">
+      <!-- Standalone SVG path logo for SILO -->
+      <svg class="h-6" viewBox="0 0 355 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="42" font-family="'Outfit', sans-serif" font-weight="900" font-size="44" fill="url(#headerGrad)">SILO</text>
+        <defs>
+          <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff9f0a" />
+            <stop offset="100%" stop-color="#30d158" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span
+        class="text-[9px] font-mono border border-orange-500/20 bg-orange-500/5 px-2 py-0.5 rounded text-orange-400 uppercase tracking-widest">TEE
+        Whistleblower Drop</span>
+    </div>
+    <div class="text-xs font-mono text-slate-500">
+      DoraHacks T3ADK Launch Edition 2026
+    </div>
+  </header>
+
+  <!-- Progress Bar at top of content -->
+  <div class="h-0.5 w-full bg-white/5 relative z-10 shrink-0">
+    <div id="progress-bar" class="h-full bg-linear-to-r from-orange-500 to-green-500 transition-all duration-300"
+      style="width: 9%"></div>
+  </div>
+
+  <!-- Slide Container -->
+  <main class="flex-1 flex items-center justify-center p-8 relative overflow-hidden">
+
+    <!-- Background Gradients -->
+    <div
+      class="absolute inset-0 bg-[radial-gradient(circle_at_15%_25%,rgba(255,159,10,0.04),transparent_50%)] pointer-events-none">
+    </div>
+    <div
+      class="absolute inset-0 bg-[radial-gradient(circle_at_85%_75%,rgba(48,209,88,0.03),transparent_50%)] pointer-events-none">
+    </div>
+
+    <!-- Tech Grid pattern -->
+    <div
+      class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-size-[48px_48px] pointer-events-none">
+    </div>
+
+    <!-- Slide 1: Title Slide (Active) -->
+    <div class="slide active max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 01 // Title &amp; Hook</span>
+        <h1 class="text-5xl font-black text-slate-100 tracking-tight leading-none mb-4">
+          Decoupling Identity<br/>From Credibility.
+        </h1>
+        <p class="text-slate-400 text-lg max-w-lg mb-6 leading-relaxed">
+          Zero-Knowledge Whistleblower Drop shielding source identity inside secure enclaves while verifying credentials.
+        </p>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative">
+        <div
+          class="absolute inset-0 bg-linear-to-br from-orange-500/5 to-green-500/5 rounded-2xl pointer-events-none">
+        </div>
+        <div class="flex items-center gap-1.5 mb-5 border-b border-white/5 pb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500/60"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/60"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
+          <span class="text-[9px] font-mono text-orange-400 ml-auto uppercase tracking-wider">Secure Ingestion Drop</span>
+        </div>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center border-b border-white/5 pb-2">
+            <span class="text-xs text-slate-400 font-mono">OTP VERIFY:</span>
+            <span class="text-xs text-green-400 font-mono font-semibold">SUCCESS (Enclave Verified)</span>
+          </div>
+          <div class="flex justify-between items-center border-b border-white/5 pb-2">
+            <span class="text-xs text-slate-400 font-mono">EVIDENCE BLOB:</span>
+            <span class="text-xs text-green-400 font-mono font-semibold">HASH MATCH (Stash Sealed)</span>
+          </div>
+          <div class="flex justify-between items-center pb-2">
+            <span class="text-xs text-slate-400 font-mono">SOURCE PROFILE:</span>
+            <span class="text-xs text-orange-400 font-mono font-semibold">ANONYMOUS (No PII)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 02 // The Problem</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">Exposed Whistleblower Identities</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Exposing critical truths demands sharing sensitive information, yet standard tip hotlines store names, emails, IP addresses, and plaintext phone numbers. A security breach on the newsroom database instantly burns the whistleblower.
+        </p>
+        <div class="flex gap-8">
+          <div class="border-l-2 border-red-500/50 pl-4">
+            <p class="text-2xl font-bold text-red-500">100%</p>
+            <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500">Exposed PII on Host Databases</p>
+          </div>
+          <div class="border-l-2 border-red-500/50 pl-4">
+            <p class="text-2xl font-bold text-red-500">Zero</p>
+            <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500">Separation of Data &amp; Source</p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex-1 bg-red-950/5 border border-red-500/10 rounded-2xl p-8 max-w-md w-full relative shadow-[0_8px_32px_0_rgba(239,68,68,0.02)]">
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.03),transparent_70%)] pointer-events-none">
+        </div>
+        <div class="flex items-center gap-1.5 mb-5 border-b border-red-500/10 pb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="text-[9px] font-mono text-red-500 ml-auto uppercase">Identifiable Database Log</span>
+        </div>
+        <div
+          class="bg-black/50 border border-red-950/50 rounded-xl p-5 font-mono text-[10.5px] text-red-400 space-y-2 leading-relaxed">
+          <div>&gt; INGESTING TIP_SUBMISSION:</div>
+          <div class="text-red-500 font-semibold pl-2"> "source_phone": "+1 415-555-0199",</div>
+          <div class="text-red-500 font-semibold pl-2"> "source_ip": "192.168.1.42"</div>
+          <div class="text-red-600/80 animate-pulse mt-4 font-bold border border-red-500/20 p-2 rounded text-center">
+            !!! WARNING: UNENCRYPTED SOURCE RECORD !!!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: The Solution -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 03 // The Solution</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">Enclave-Guarded Anonymous Drops</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Silo decouples evidence credibility from reporter identity. The enclave verifies the source's phone/email OTP and issues a cryptographic "Verified Human" Verifiable Credential. The unsecure coordinator agent and database only see anonymous metadata.
+        </p>
+        <div class="grid grid-cols-2 gap-4 w-full">
+          <div class="glass-panel rounded-xl p-4 glass-card-hover transition-all duration-300">
+            <span class="text-green-400 font-bold block text-lg">ZK Credibility</span>
+            <span class="text-[10px] uppercase font-mono tracking-wider text-slate-500">OTP verified inside TEE</span>
+          </div>
+          <div class="glass-panel rounded-xl p-4 glass-card-hover transition-all duration-300">
+            <span class="text-green-400 font-bold block text-lg">Tamper Detection</span>
+            <span class="text-[10px] uppercase font-mono tracking-wider text-slate-500">Stash hashes verified on read</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative">
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(48,209,88,0.03),transparent_70%)] pointer-events-none">
+        </div>
+        <div class="flex items-center gap-1.5 mb-5 border-b border-white/5 pb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500/60"></span>
+          <span class="text-[9px] font-mono text-green-400 ml-auto uppercase">Secure Decoupling Flow</span>
+        </div>
+        <div class="space-y-2.5 font-mono text-xs">
+          <div class="flex items-center justify-between bg-black/40 border border-white/5 p-3 rounded-lg">
+            <span class="text-slate-400">Source</span>
+            <span class="text-orange-400 font-semibold">Raw PII + Evidence</span>
+          </div>
+          <div class="text-center text-slate-600 font-bold leading-none">&darr;</div>
+          <div class="flex items-center justify-between bg-black/40 border border-white/5 p-3 rounded-lg">
+            <span class="text-slate-400">TEE Enclave</span>
+            <span class="text-green-400 font-semibold">OTP Verification</span>
+          </div>
+          <div class="text-center text-slate-600 font-bold leading-none">&darr;</div>
+          <div class="flex items-center justify-between bg-green-950/20 border border-green-500/20 p-3 rounded-lg">
+            <span class="text-green-400">Coordinator Agent</span>
+            <span class="text-green-400 font-bold">Anonymous Metadata Only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Core Architecture -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 04 // Core Architecture</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">Terminal 3 ADK Integration</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Silo integrates 5 key Terminal 3 Host APIs directly. Evidence is ingested using `stash`, phone numbers are verified via `otp`, follow-up chat is blinded via `http-with-placeholders`, and report manifests are attested via `signing`.
+        </p>
+        <div class="grid grid-cols-2 gap-3 w-full font-mono text-[10px] text-slate-400">
+          <div class="glass-panel p-3.5 rounded-xl glass-card-hover transition-all duration-300">
+            <span class="text-orange-400 block font-bold mb-1 uppercase tracking-wider">stash</span> Safe blind document storage
+          </div>
+          <div class="glass-panel p-3.5 rounded-xl glass-card-hover transition-all duration-300">
+            <span class="text-orange-400 block font-bold mb-1 uppercase tracking-wider">otp</span> Credentials verified, never stored
+          </div>
+          <div class="glass-panel p-3.5 rounded-xl glass-card-hover transition-all duration-300">
+            <span class="text-orange-400 block font-bold mb-1 uppercase tracking-wider">http-placeholders</span> Blinds relayed chat variables
+          </div>
+          <div class="glass-panel p-3.5 rounded-xl glass-card-hover transition-all duration-300">
+            <span class="text-orange-400 block font-bold mb-1 uppercase tracking-wider">signing</span> Issues verifiable credentials
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative">
+        <div class="flex items-center gap-1.5 mb-5 border-b border-white/5 pb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="text-[9px] font-mono text-slate-500 ml-auto uppercase">Secure Ingestion Log</span>
+        </div>
+        <div class="bg-black/60 rounded-xl border border-white/5 p-5 font-mono text-[10px] text-slate-400 space-y-2">
+          <div><span class="text-slate-500">// Enclave document ingestion:</span></div>
+          <div>action: "stash::upload"</div>
+          <div>hash: "0xea839f..."</div>
+          <div class="text-green-500/80 pt-1.5 border-t border-white/5">// Document contents sealed in enclave</div>
+          <div class="text-green-400 font-semibold">status: "Sealed (Tamper Proof)"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Blind Chat Relay -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 05 // Blind Relay</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">Shielded Two-Way Chat</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          To facilitate follow-up questions without disclosing contact endpoints, Silo routes communications anonymously. Relayed messages are compiled at the edge using `http-with-placeholders`, substituting recipient placeholders inside the secure tunnel.
+        </p>
+        <div class="flex gap-4">
+          <div class="glass-panel rounded-xl p-4">
+            <span class="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">HTTP Outbox</span>
+            <span class="text-xs font-bold text-slate-200 mt-1 block">Placeholders Substitution</span>
+          </div>
+          <div class="glass-panel rounded-xl p-4">
+            <span class="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">Cryptographic Shield</span>
+            <span class="text-xs font-bold text-slate-200 mt-1 block">No Direct Contact Exposed</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative">
+        <div class="flex items-center gap-1.5 mb-5 border-b border-white/5 pb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="text-[9px] font-mono text-slate-500 ml-auto uppercase">Relay Egress Map</span>
+        </div>
+        <div
+          class="bg-black/60 rounded-xl border border-white/5 p-5 font-mono text-[9px] text-slate-400 space-y-1 overflow-x-hidden leading-relaxed">
+          <div>POST /api/relay HTTP/1.1</div>
+          <div>body: {</div>
+          <div class="pl-2"> "recipient": "{{profile.phone}}",</div>
+          <div class="pl-2"> "message": "Verify document source context"</div>
+          <div>}</div>
+          <div class="text-green-400 font-semibold mt-1 border-t border-white/5 pt-1.5">recipient substituted with verified phone number inside TEE</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: The Silo Dashboard -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 06 // Live Dashboard</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">Double-Sided Reporter Console</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Silo's Next.js 14 console provides a Whistleblower Secure Drop Panel (with document upload and OTP entry) and a Journalist Console (with report listing, document validation alerts, and anonymous follow-up chat routing).
+        </p>
+        <div class="flex gap-6 font-mono text-xs text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></span>
+            <span>Anonymous Document Upload</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-orange-400 shadow-[0_0_8px_rgba(245,158,11,0.4)]"></span>
+            <span>Tamper Detection Checks</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-6 max-w-md w-full relative">
+        <div class="border-b border-white/5 pb-3 mb-4 flex justify-between items-center">
+          <span class="text-[10px] font-bold text-slate-200 tracking-wider font-mono">JOURNALIST PANEL</span>
+          <span
+            class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]"></span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mb-4 font-mono text-[8px]">
+          <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2 rounded-lg text-center font-bold">
+            VALID DECRYPT</div>
+          <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2 rounded-lg text-center font-bold">
+            VERIFIED HUMAN</div>
+        </div>
+        <div
+          class="bg-black/50 rounded-xl border border-white/5 p-4 font-mono text-[9px] text-slate-400 space-y-1 leading-relaxed">
+          <div><span class="text-slate-600">&gt;</span> [ENCLAVE] Report manifest VC verified.</div>
+          <div><span class="text-slate-600">&gt;</span> [ENCLAVE] Document hash matches stash index.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: Latency Performance -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 07 // Performance</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">Sub-Millisecond Document Hashing</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          Security without compromise. Rust-compiled enclaves execute OTP verification mapping, document hashing, and stash record lookups in sub-millisecond timelines.
+        </p>
+        <div class="w-full border border-white/5 rounded-xl overflow-hidden bg-slate-950/40">
+          <table class="w-full font-mono text-xs">
+            <thead>
+              <tr class="border-b border-white/5 bg-slate-950 text-slate-400 text-left">
+                <th class="p-3">Phase</th>
+                <th class="p-3">p50</th>
+                <th class="p-3">p99</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-white/5 hover:bg-white/5">
+                <td class="p-3 text-slate-200">OTP Session Binding</td>
+                <td class="p-3 text-orange-400 font-semibold">0.52 ms</td>
+                <td class="p-3 text-orange-400">1.04 ms</td>
+              </tr>
+              <tr class="border-b border-white/5 hover:bg-white/5">
+                <td class="p-3 text-slate-200">Document Hashing</td>
+                <td class="p-3 text-orange-400 font-semibold">0.78 ms</td>
+                <td class="p-3 text-orange-400">1.42 ms</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 text-slate-200">State Lookups</td>
+                <td class="p-3 text-green-400 font-semibold">&lt; 0.002 ms</td>
+                <td class="p-3 text-green-400">&lt; 0.004 ms</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative flex flex-col justify-between">
+        <span class="text-xs font-mono text-slate-400 block mb-6 uppercase">Evaluation Benchmarks</span>
+        <div class="h-32 flex items-end gap-5 justify-between pb-3 border-b border-white/5">
+          <div
+            class="w-16 bg-orange-500/10 border border-orange-500/25 rounded-t-lg h-12 flex items-center justify-center font-mono text-[9px] text-orange-400 flex-col gap-0.5 hover:bg-orange-500/20 transition-all duration-300">
+            <span class="font-bold">0.52ms</span>
+            <span class="text-[7px] text-slate-500">OTP</span>
+          </div>
+          <div
+            class="w-16 bg-orange-500/25 border border-orange-500/40 rounded-t-lg h-22 flex items-center justify-center font-mono text-[9px] text-orange-300 flex-col gap-0.5 hover:bg-orange-500/35 transition-all duration-300">
+            <span class="font-bold">0.78ms</span>
+            <span class="text-[7px] text-slate-500">Hashing</span>
+          </div>
+          <div
+            class="w-16 bg-emerald-500/10 border border-emerald-500/25 rounded-t-lg h-3 flex items-center justify-center font-mono text-[7px] text-emerald-400 flex-col hover:bg-emerald-500/20 transition-all duration-300">
+            <span class="font-bold">&lt;4μs</span>
+            <span class="text-[6px] text-slate-500">lookup</span>
+          </div>
+        </div>
+        <span class="text-[9px] font-mono text-slate-500 mt-3 block text-center">Benchmark run over 1,000 simulated
+          iterations</span>
+      </div>
+    </div>
+
+    <!-- Slide 8: Discovered SDK Bugs & Gaps -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 08 // Bug Bounty</span>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-6">11 Onboarding Bugs &amp; Gaps</h2>
+        <p class="text-slate-400 leading-relaxed mb-6">
+          While building the Vouch Suite (including Silo, Synod, Epoch, Lethe, and Visor), we performed a deep audit of the `@terminal3` SDK. We discovered and documented 11 distinct bugs and documentation gaps, providing full workarounds.
+        </p>
+        <div class="space-y-2.5 text-xs font-mono text-slate-300">
+          <div class="flex items-center gap-2.5">
+            <span class="text-orange-400 font-bold">&radic;</span>
+            <span>Missing verifiable credential issue helper (Bug #4)</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-orange-400 font-bold">&radic;</span>
+            <span>Undocumented http-with-placeholders unmatched marker behavior (Gap #10)</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative flex items-center justify-center">
+        <div class="w-full space-y-4">
+          <span class="text-xs font-mono text-slate-500 uppercase">Bug Bounty Contributions</span>
+          <div
+            class="p-5 border border-orange-500/20 bg-orange-950/10 rounded-xl flex items-center gap-4 hover:border-orange-500/40 transition-all duration-300">
+            <div
+              class="w-12 h-12 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center font-bold text-orange-400 font-display shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+              BUG</div>
+            <div class="flex-1">
+              <span class="text-xs font-bold text-slate-200 block">11 Audited Findings</span>
+              <span class="text-[10px] font-mono text-slate-400">Detailed repros &amp; fixes in BUGS.md</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Call to Action -->
+    <div class="slide max-w-5xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-orange-400 uppercase mb-4">Slide 09 // Conclusion</span>
+        <h2 class="text-5xl font-black tracking-tight mb-6">Protect Your Sources Today</h2>
+        <p class="text-slate-400 leading-relaxed mb-8 max-w-md">
+          Silo is fully open-source, offering a robust client-side SDK, Express coordinator gateway, Rust enclave contract, and dual-sided Next.js dashboard.
+        </p>
+        <div class="flex gap-4">
+          <a href="https://github.com/edycutjong/silo" target="_blank"
+            class="px-6 py-3 bg-linear-to-r from-orange-500 to-green-500 rounded-xl text-xs font-mono font-bold text-slate-950 hover:opacity-90 hover:shadow-[0_0_20px_rgba(245,158,11,0.25)] transition-all">
+            GITHUB REPOSITORY
+          </a>
+          <button onclick="goToSlide(0)"
+            class="px-6 py-3 border border-white/10 hover:border-white/20 rounded-xl text-xs font-mono font-bold text-slate-400 hover:text-slate-200 transition-colors">
+            RESTART &larr;
+          </button>
+        </div>
+      </div>
+      <div class="flex-1 glass-panel rounded-2xl p-8 max-w-md w-full relative">
+        <div class="flex items-center gap-1.5 mb-5 border-b border-white/5 pb-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-800"></span>
+          <span class="text-[9px] font-mono text-slate-500 ml-auto uppercase">Silo Specifications</span>
+        </div>
+        <div class="space-y-3 font-mono text-[10.5px] text-slate-400">
+          <div class="flex justify-between"><span>SDK Release:</span><span
+              class="text-orange-400 font-semibold">v1.0.0-beta</span></div>
+          <div class="flex justify-between"><span>TEE Runtime:</span><span class="text-orange-400 font-semibold">Active
+              (TDX)</span></div>
+          <div class="flex justify-between"><span>Egress Sandbox:</span><span class="text-green-400 font-semibold">Operational</span></div>
+          <div class="flex justify-between"><span>License:</span><span class="text-slate-300">MIT</span></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Navigation Footer Controls -->
+  <footer
+    class="h-16 border-t border-white/5 bg-[#06070a]/80 backdrop-blur-lg flex items-center justify-between px-8 z-10 shrink-0">
+    <div class="text-[10px] font-mono text-slate-500 uppercase">
+      Silo Pitch Deck · Swiss International Style
+    </div>
+    <div class="flex items-center gap-6">
+      <button onclick="prevSlide()"
+        class="px-4 py-1.5 border border-white/5 hover:border-white/10 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-mono text-slate-400 hover:text-slate-200 transition-all select-none">&larr;
+        PREV</button>
+      <div class="flex items-center gap-2" id="dot-navigation"></div>
+      <span id="slide-num" class="text-xs font-mono text-orange-400 min-w-[50px] text-center">1 / 9</span>
+      <button onclick="nextSlide()"
+        class="px-4 py-1.5 border border-white/5 hover:border-white/10 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-mono text-slate-400 hover:text-slate-200 transition-all select-none">NEXT
+        &rarr;</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const slideNum = document.getElementById('slide-num');
+    const progressBar = document.getElementById('progress-bar');
+    const dotNavigation = document.getElementById('dot-navigation');
+
+    function initDots() {
+      dotNavigation.innerHTML = '';
+      slides.forEach((slide, index) => {
+        const dot = document.createElement('button');
+        dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide ? 'bg-orange-500 w-4' : 'bg-white/20 hover:bg-white/40'}`;
+        dot.title = slide.querySelector('h2')?.textContent || `Slide ${index + 1}`;
+        dot.onclick = () => goToSlide(index);
+        dotNavigation.appendChild(dot);
+      });
+    }
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+
+      // Update Slide numbers and progress bar
+      slideNum.textContent = `${currentSlide + 1} / ${slides.length}`;
+      const progressPercent = ((currentSlide + 1) / slides.length) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Update Dot classes
+      const dots = dotNavigation.querySelectorAll('button');
+      dots.forEach((dot, index) => {
+        if (index === currentSlide) {
+          dot.className = 'w-2 h-2 rounded-full transition-all duration-300 bg-orange-500 w-4';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full transition-all duration-300 bg-white/20 hover:bg-white/40';
+        }
+      });
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlides();
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= 0 && index < slides.length) {
+        currentSlide = index;
+        updateSlides();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      }
+    });
+
+    // Initialize dot navigation controls
+    initDots();
+  </script>
+</body>
+
+</html>
