@@ -1,13 +1,41 @@
 import fs from 'fs';
 import path from 'path';
-import { getKv, setKv, readDb, writeDb, getStash, setStash } from './db';
+import crypto from 'crypto';
+import { getKv, setKv, readDb, updateDb, getStash, setStash } from './db';
 
-function base64UrlEncode(str: string): string {
-  return Buffer.from(str)
+function base64UrlEncode(input: string | Buffer): string {
+  return Buffer.from(input)
     .toString('base64')
     .replace(/=/g, '')
     .replace(/\+/g, '-')
     .replace(/\//g, '_');
+}
+
+// --- Enclave signing key (Ed25519) -----------------------------------------
+// The manifest VC is signed with a real EdDSA signature so that anyone holding
+// the enclave public key can verify it (and detect a forged/tampered manifest).
+// Pin a key across restarts with SILO_ENCLAVE_PRIVATE_KEY (PKCS8 PEM); otherwise
+// an ephemeral key is generated for the process.
+let enclaveKeys: { publicKey: crypto.KeyObject; privateKey: crypto.KeyObject } | null = null;
+function getEnclaveKeys() {
+  if (enclaveKeys) return enclaveKeys;
+  const pem = process.env.SILO_ENCLAVE_PRIVATE_KEY;
+  if (pem) {
+    const privateKey = crypto.createPrivateKey(pem);
+    const publicKey = crypto.createPublicKey(privateKey);
+    enclaveKeys = { publicKey, privateKey };
+  } else {
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('ed25519');
+    enclaveKeys = { publicKey, privateKey };
+  }
+  return enclaveKeys;
+}
+
+export const ENCLAVE_ISSUER_DID = 'did:t3n:silo-enclave-authority';
+
+// Public key (JWK) for verifiers (journalist console / CLI / external tools).
+export function getEnclavePublicKeyJwk(): JsonWebKey {
+  return getEnclaveKeys().publicKey.export({ format: 'jwk' }) as JsonWebKey;
 }
 
 export async function runWasmContract(
@@ -43,7 +71,13 @@ export async function runWasmContract(
         if (value === null) {
           return -1;
         }
-        return writeStringToWasm(value, valBufPtr, valBufLen);
+        // Write what fits but return the FULL byte length, so the guest can detect
+        // truncation and re-read into a larger buffer instead of losing data.
+        const encoded = new TextEncoder().encode(value);
+        const writeLen = Math.min(encoded.length, valBufLen);
+        const memView = new Uint8Array(wasmMemory.buffer, valBufPtr, valBufLen);
+        memView.set(encoded.subarray(0, writeLen));
+        return encoded.length;
       },
 
       host_kv_store_set: (keyPtr: number, keyLen: number, valPtr: number, valLen: number): number => {
@@ -70,12 +104,13 @@ export async function runWasmContract(
         const subject = readStringFromWasm(subjectPtr, subjectLen);
         const claims = readStringFromWasm(claimsPtr, claimsLen);
 
-        console.log(`[Host Signing] Issuing VC for subject=${subject}, claims=${claims}`);
+        // Do not log claims (they carry report metadata); subject is non-PII.
+        console.log(`[Host Signing] Issuing VC for subject=${subject}`);
 
         const header = JSON.stringify({ alg: "EdDSA", typ: "JWT" });
         const payload = JSON.stringify({
           sub: subject,
-          iss: "did:t3n:silo-enclave-authority",
+          iss: ENCLAVE_ISSUER_DID,
           nbf: Math.floor(Date.now() / 1000),
           vc: {
             "@context": [
@@ -86,12 +121,15 @@ export async function runWasmContract(
           }
         });
 
-        const signature = "sig-" + Buffer.from(payload).slice(0, 16).toString('hex');
-        const jwt = `${base64UrlEncode(header)}.${base64UrlEncode(payload)}.${base64UrlEncode(signature)}`;
+        // Real EdDSA (Ed25519) signature over the JWS signing input.
+        const signingInput = `${base64UrlEncode(header)}.${base64UrlEncode(payload)}`;
+        const { privateKey } = getEnclaveKeys();
+        const signature = crypto.sign(null, Buffer.from(signingInput), privateKey);
+        const jwt = `${signingInput}.${base64UrlEncode(signature)}`;
 
         const vcResponse = JSON.stringify({
           credential: jwt,
-          issuer: "did:t3n:silo-enclave-authority",
+          issuer: ENCLAVE_ISSUER_DID,
           subject,
           claims: JSON.parse(claims)
         });
@@ -106,16 +144,30 @@ export async function runWasmContract(
       ): number => {
         const url = readStringFromWasm(urlPtr, urlLen);
         const body = readStringFromWasm(bodyPtr, bodyLen);
-        console.log(`[Host Egress] Received POST to ${url} with placeholders: ${body}`);
+        // Log only the destination — the body resolves to PII at egress.
+        console.log(`[Host Egress] Dispatching blind POST to ${url}`);
 
-        // Resolve profile placeholders
+        // Resolve the contact bound to THIS session (not a shared global profile),
+        // so a journalist follow-up can never be routed to a different source.
         const db = readDb();
-        const activeDid = process.env.DID || "did:t3n:whistleblower123";
-        const profile = db.profiles[activeDid] || db.profiles["did:t3n:whistleblower123"] || {
-          first_name: process.env.DEFAULT_PROFILE_FIRST_NAME || "Anonymous",
-          verified_contacts: { email: { value: process.env.DEFAULT_PROFILE_EMAIL || "whistleblower@hospital-safety.org" } }
-        };
+        let sessionId: string | null = null;
+        try {
+          const parsed = JSON.parse(body);
+          if (parsed && typeof parsed.sessionId === 'string') sessionId = parsed.sessionId;
+        } catch (_e) { /* body may not be JSON (e.g. raw placeholder test) */ }
 
+        const activeDid = process.env.DID || "did:t3n:whistleblower123";
+        const profile =
+          (sessionId ? db.profiles[sessionId] : undefined) ||
+          db.profiles[activeDid] ||
+          db.profiles["did:t3n:whistleblower123"] || {
+            first_name: process.env.DEFAULT_PROFILE_FIRST_NAME || "Anonymous",
+            verified_contacts: { email: { value: process.env.DEFAULT_PROFILE_EMAIL || "whistleblower@hospital-safety.org" } }
+          };
+
+        // The resolved body (with real contact) is what the newsroom receives, but
+        // it is NEVER persisted or logged. We store a redacted copy so the dashboard
+        // can show the manifest without burning the source.
         let resolvedBody = body;
         resolvedBody = resolvedBody.replace(/\{\{profile\.first_name\}\}/g, profile.first_name);
         resolvedBody = resolvedBody.replace(
@@ -123,20 +175,22 @@ export async function runWasmContract(
           profile.verified_contacts?.email?.value || process.env.DEFAULT_PROFILE_EMAIL || "whistleblower@hospital-safety.org"
         );
 
-        console.log(`[Host Egress] Resolved body for egress: ${resolvedBody}`);
+        // Redacted body for persistence: replace contact placeholders with a marker
+        // so pseudonym/evidenceHash/manifestSignature survive but the contact does not.
+        const redactedBody = body
+          .replace(/\{\{profile\.first_name\}\}/g, '[redacted]')
+          .replace(/\{\{profile\.verified_contacts\.email\.value\}\}/g, '[redacted]');
 
-        // Log this delivery to database so dashboard can fetch it
         const report = {
           timestamp: Date.now(),
           url,
           originalBody: body,
-          resolvedBody,
+          resolvedBody: redactedBody,
           status: "delivered",
-          inboxId: `inbox-${Math.random().toString(36).substr(2, 9)}`
+          inboxId: `inbox-${crypto.randomBytes(6).toString('hex')}`
         };
 
-        db.dispatchedReports.push(report);
-        writeDb(db);
+        updateDb((d) => { d.dispatchedReports.push(report); });
 
         const responseJson = JSON.stringify({
           status: "accepted",
@@ -149,12 +203,14 @@ export async function runWasmContract(
 
       host_stash_put: (dataPtr: number, dataLen: number, refBufPtr: number, refBufLen: number): number => {
         const memView = new Uint8Array(wasmMemory.buffer, dataPtr, dataLen);
-        const dataBase64 = Buffer.from(memView).toString('base64');
-        const refId = `ref-${Math.random().toString(36).substr(2, 9)}`;
-        const refStr = `stash://${refId}`;
+        const dataBuf = Buffer.from(memView);
+        const dataBase64 = dataBuf.toString('base64');
+        // Content-addressed reference: identical uploads dedupe to the same ref.
+        const digest = crypto.createHash('sha256').update(dataBuf).digest('hex');
+        const refStr = `stash://ref-${digest.slice(0, 16)}`;
         setStash(refStr, dataBase64);
-        
-        console.log(`[Host Stash] Uploaded ${dataLen} bytes to stash, reference: ${refStr}`);
+
+        console.log(`[Host Stash] Stored ${dataLen} bytes (content-addressed) ref=${refStr}`);
         return writeStringToWasm(refStr, refBufPtr, refBufLen);
       },
 
@@ -177,10 +233,17 @@ export async function runWasmContract(
       host_otp_verify: (codePtr: number, codeLen: number): number => {
         const code = readStringFromWasm(codePtr, codeLen);
         const db = readDb();
-        console.log(`[Host OTP] Verifying code: ${code} against activeOtp: ${db.activeOtp}`);
-        const mockOtps = (process.env.MOCK_OTP_CODES || '883391,000000').split(',');
-        if (code === db.activeOtp || mockOtps.includes(code)) {
+        // Never log the submitted code or the expected OTP.
+        console.log('[Host OTP] Verifying submitted code against the enclave-held challenge');
+        if (db.activeOtp !== null && code === db.activeOtp) {
           return 1;
+        }
+        // Mock backdoor codes are only honored outside production (demos/tests).
+        if (process.env.NODE_ENV !== 'production') {
+          const mockOtps = (process.env.MOCK_OTP_CODES || '883391,000000').split(',');
+          if (mockOtps.includes(code)) {
+            return 1;
+          }
         }
         return 0;
       }

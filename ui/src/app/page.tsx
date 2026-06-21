@@ -22,6 +22,30 @@ import {
 
 const AGENT_URL = process.env.NEXT_PUBLIC_AGENT_URL || 'http://localhost:3001';
 
+// Decode a base64url string (JWS signature) to bytes.
+function base64UrlToBytes(b64url: string): Uint8Array {
+  const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+  const pad = b64.length % 4 === 0 ? '' : '='.repeat(4 - (b64.length % 4));
+  const bin = window.atob(b64 + pad);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+// Verify the enclave's EdDSA (Ed25519) manifest signature with the public key.
+// Returns false (rather than throwing) when Web Crypto Ed25519 is unavailable.
+async function verifyManifestSignature(manifest: string, jwk: JsonWebKey): Promise<boolean> {
+  const subtle = (window.crypto as Crypto | undefined)?.subtle as SubtleCrypto | undefined;
+  if (!subtle || !('importKey' in subtle) || !('verify' in subtle)) return false;
+  const vc = JSON.parse(manifest);
+  const jwt: string = vc.credential;
+  const [h, p, s] = jwt.split('.');
+  const data = new TextEncoder().encode(`${h}.${p}`);
+  const sig = base64UrlToBytes(s);
+  const key = await subtle.importKey('jwk', jwk, { name: 'Ed25519' }, false, ['verify']);
+  return subtle.verify('Ed25519', key, sig as unknown as BufferSource, data as unknown as BufferSource);
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'whistleblower' | 'journalist' | 'telemetry'>('whistleblower');
   
@@ -191,14 +215,13 @@ export default function Home() {
       setDebugOtp(openData.debugOtp);
       addLog(`Secure Session Created: ${activeSessionId}. Pseudonym assigned: ${openData.pseudonym}`);
 
-      // 2. Seed profile contact detail in agent database
-      // The coordinator agent matches did:t3n:whistleblower123 or dynamic DID
-      const activeDid = process.env.NEXT_PUBLIC_T3N_DID || 'did:t3n:whistleblower123';
+      // 2. Bind the whistleblower's contact to THIS session (not a shared global
+      //    profile), so a journalist follow-up can never be routed to another source.
       await fetch(`${AGENT_URL}/api/seed/profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          did: activeDid,
+          did: activeSessionId,
           profile: {
             first_name: 'Anonymous',
             verified_contacts: {
@@ -207,7 +230,7 @@ export default function Home() {
           }
         })
       });
-      addLog(`Insulated whistleblower contact registration inside agent profile`);
+      addLog(`Whistleblower contact sealed to session ${activeSessionId} inside the enclave profile store`);
 
       // 3. Attach evidence to TEE (WASM will store it in stash and verify computed hash)
       const attachRes = await fetch(`${AGENT_URL}/api/drop/attach`, {
@@ -372,6 +395,21 @@ export default function Home() {
         setIntegrityStatus('tampered');
         addLog(`Integrity Checked: MISMATCH. Tampering detected!`);
       }
+
+      // 4. Best-effort: verify the enclave's real EdDSA manifest signature against
+      //    the published enclave public key (degrades gracefully if unavailable).
+      try {
+        const pkRes = await fetch(`${AGENT_URL}/api/enclave/pubkey`);
+        const pk = await pkRes.json();
+        if (pk?.publicKeyJwk && selectedReport.signature) {
+          const sigOk = await verifyManifestSignature(selectedReport.signature, pk.publicKeyJwk);
+          addLog(sigOk
+            ? `Manifest EdDSA signature verified against enclave public key.`
+            : `WARNING: manifest signature failed enclave verification.`);
+        }
+      } catch (_e) {
+        // Signature verification unavailable in this environment — hash check stands.
+      }
     } catch (e: any) {
       showToast(`Integrity validation failed: ${e.message}`, 'error');
     } finally {
@@ -531,8 +569,8 @@ export default function Home() {
             <span className="font-bold text-white text-sm mt-0.5">100% Cryptographic</span>
           </div>
           <div className="flex flex-col gap-1 items-center border-r border-slate-850 last:border-0">
-            <span className="text-slate-500 text-[10px]">ENCLAVE ENCRYPTION</span>
-            <span className="font-bold text-blue-400 text-sm mt-0.5">256-Bit ECIES</span>
+            <span className="text-slate-500 text-[10px]">MANIFEST SIGNING</span>
+            <span className="font-bold text-blue-400 text-sm mt-0.5">EdDSA Ed25519</span>
           </div>
           <div className="flex flex-col gap-1 items-center border-r border-slate-850 last:border-0">
             <span className="text-slate-500 text-[10px]">INTEGRITY AUDIT</span>
@@ -823,9 +861,9 @@ export default function Home() {
               <div className="border-t border-slate-900 pt-6 mt-8 flex flex-col md:flex-row items-center justify-between text-[11px] text-slate-500 gap-4">
                 <div className="flex items-center gap-2">
                   <Lock className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>Verified 256-bit ECIES Asymmetric Encryption active</span>
+                  <span>Manifest signed with EdDSA (Ed25519) inside the enclave</span>
                 </div>
-                <span>Host: Intel TDX Hardware Enclave Cluster</span>
+                <span>Host: Simulated TEE (Terminal 3 host API mocks)</span>
               </div>
             </div>
           )}

@@ -8,6 +8,7 @@
   <br/>
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://silo.edycu.dev)
+  [![Agent API](https://img.shields.io/badge/🤖_Agent-API-06b6d4?style=for-the-badge)](https://agent.silo.edycu.dev)
   [![Pitch Video](https://img.shields.io/badge/🎬_Pitch-Video-ef4444?style=for-the-badge)](https://youtu.be/dummy-silo-pitch-demo-url)
   [![Sponsor Challenge](https://img.shields.io/badge/DoraHacks-Terminal_3_Bounty-8b5cf6?style=for-the-badge)](https://dorahacks.io/hackathon/t3adkdevchallenge)
 
@@ -136,7 +137,7 @@ We target the **Best Agent Track** of the Terminal 3 Agent Dev Kit Bounty Challe
 
 We maintain a rigorous test harness ensuring 100% code path reliability:
 - **Rust Unit Tests:** 29 unit tests validating WASM memory bounds, hashing logic, and OTP states, including error-handling and allocator states (100% line coverage).
-- **Express Integration Tests:** 41 distinct test cases covering report submission, message relays, database resets, and download checks (100% statement and branch coverage).
+- **Express Integration Tests:** 49 distinct test cases covering report submission, per-session OTP binding, blind relay routing, admin-token enforcement, database resets, and download checks (100% statement and branch coverage).
 - **Playwright E2E Tests:** 5 E2E tests verifying layout, tab navigation, and responsive viewport states.
 
 ```bash
