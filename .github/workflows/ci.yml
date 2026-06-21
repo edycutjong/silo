@@ -179,10 +179,65 @@ jobs:
         run: |
           echo "🚀 All CI/CD gates passed!"
 
-  # ── STAGE 7: Deploy to Railway (main only) ────────────────
-  deploy-railway:
-    name: "Stage 7 · Deploy to Railway"
+  # ── STAGE 7: Publish to npmjs & GitHub Packages (main only) ──
+  publish-npm:
+    name: "Stage 7 · Publish to npmjs & GitHub Packages"
     needs: [deploy-gate]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js for npmjs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+          cache-dependency-path: |
+            cli/package-lock.json
+
+      - name: Install and Build CLI
+        run: |
+          cd cli
+          npm ci
+          npm run build
+
+      - name: Check and Publish CLI to npmjs
+        run: |
+          cd cli
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if npm view @edycutjong/silo-cli@$CURRENT_VERSION version >/dev/null 2>&1; then
+            echo "Version $CURRENT_VERSION of @edycutjong/silo-cli is already published to npmjs, skipping."
+          else
+            echo "Publishing @edycutjong/silo-cli version $CURRENT_VERSION to npmjs..."
+            npm publish --provenance --access public --ignore-scripts
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: Publish CLI to GitHub Packages
+        run: |
+          cd cli
+          npm publish --access public --ignore-scripts || echo "CLI already published or error"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── STAGE 8: Deploy to Railway (main only) ────────────────
+  deploy-railway:
+    name: "Stage 8 · Deploy to Railway"
+    needs: [publish-npm]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
