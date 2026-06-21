@@ -43,7 +43,8 @@ export interface DbSchema {
   mediaOutlets: any[];
   dispatchedReports: any[];
   stash: Record<string, string>; // maps stashRef -> base64 file data
-  activeOtp: string | null;
+  otps: Record<string, string>; // maps sessionId -> active OTP code (per-session)
+  activeOtp: string | null; // legacy global OTP (kept for host_otp_verify compatibility)
 }
 
 export function initDb() {
@@ -85,6 +86,7 @@ export function initDb() {
       ],
       dispatchedReports: [],
       stash: {},
+      otps: {},
       activeOtp: null
     };
 
@@ -96,37 +98,71 @@ export function readDb(): DbSchema {
   initDb();
   const content = fs.readFileSync(DB_PATH, 'utf-8');
   try {
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    // Defensive: ensure newer collections exist on DBs written by older versions.
+    if (!parsed.otps) parsed.otps = {};
+    return parsed;
   } catch (e) {
-    return { kv: {}, profiles: {}, mediaOutlets: [], dispatchedReports: [], stash: {}, activeOtp: null };
+    // Corrupt file: preserve it for forensics instead of silently overwriting,
+    // then fall back to an empty schema so the process keeps serving.
+    fs.renameSync(DB_PATH, `${DB_PATH}.corrupt`);
+    return { kv: {}, profiles: {}, mediaOutlets: [], dispatchedReports: [], stash: {}, otps: {}, activeOtp: null };
   }
 }
 
+// Atomic write: write to a temp file then rename, so a crash mid-write can never
+// leave a half-written (corrupt) db.json behind.
 export function writeDb(data: DbSchema) {
   initDb();
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+  const tmpPath = `${DB_PATH}.tmp-${process.pid}`;
+  fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2));
+  fs.renameSync(tmpPath, DB_PATH);
+}
+
+// Safe read-modify-write. The mutator runs synchronously between read and write
+// (no await), so concurrent requests cannot interleave and clobber each other.
+export function updateDb(mutator: (db: DbSchema) => void): DbSchema {
+  const db = readDb();
+  mutator(db);
+  writeDb(db);
+  return db;
 }
 
 export function getKv(key: string): string | null {
   const db = readDb();
-  return db.kv[key] || null;
+  // Use key-presence (not truthiness) so a legitimately empty value is returned.
+  return Object.prototype.hasOwnProperty.call(db.kv, key) ? db.kv[key] : null;
 }
 
 export function setKv(key: string, value: string): void {
-  const db = readDb();
-  db.kv[key] = value;
-  writeDb(db);
+  updateDb((db) => { db.kv[key] = value; });
 }
 
 export function getStash(ref: string): string | null {
   const db = readDb();
-  return db.stash[ref] || null;
+  return Object.prototype.hasOwnProperty.call(db.stash, ref) ? db.stash[ref] : null;
 }
 
 export function setStash(ref: string, value: string): void {
+  updateDb((db) => { db.stash[ref] = value; });
+}
+
+export function getOtp(sessionId: string): string | null {
   const db = readDb();
-  db.stash[ref] = value;
-  writeDb(db);
+  return Object.prototype.hasOwnProperty.call(db.otps, sessionId) ? db.otps[sessionId] : null;
+}
+
+export function setOtp(sessionId: string, code: string): void {
+  updateDb((db) => {
+    db.otps[sessionId] = code;
+    db.activeOtp = code; // keep legacy global in sync for host_otp_verify
+  });
+}
+
+// Align the legacy global challenge that the in-enclave host_otp_verify reads
+// with a specific session's OTP, just before verification.
+export function setActiveOtp(code: string): void {
+  updateDb((db) => { db.activeOtp = code; });
 }
 
 export function clearDb(): void {

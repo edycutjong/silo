@@ -136,7 +136,7 @@ We target the **Best Agent Track** of the Terminal 3 Agent Dev Kit Bounty Challe
 
 We maintain a rigorous test harness ensuring 100% code path reliability:
 - **Rust Unit Tests:** 29 unit tests validating WASM memory bounds, hashing logic, and OTP states, including error-handling and allocator states (100% line coverage).
-- **Express Integration Tests:** 41 distinct test cases covering report submission, message relays, database resets, and download checks (100% statement and branch coverage).
+- **Express Integration Tests:** 49 distinct test cases covering report submission, per-session OTP binding, blind relay routing, admin-token enforcement, database resets, and download checks (100% statement and branch coverage).
 - **Playwright E2E Tests:** 5 E2E tests verifying layout, tab navigation, and responsive viewport states.
 
 ```bash

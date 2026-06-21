@@ -681,6 +681,14 @@ describe('Silo Agent Test Suite (100% Coverage)', () => {
     resLen = callPost('https://test.url', '{{profile.first_name}} {{profile.verified_contacts.email.value}}');
     expect(resLen).toBeGreaterThan(0);
 
+    // Cover the per-session sessionId parse branches:
+    resLen = callPost('https://test.url', 'null'); // valid JSON but falsy -> no sessionId
+    expect(resLen).toBeGreaterThan(0);
+    resLen = callPost('https://test.url', JSON.stringify({ foo: 1 })); // JSON object, no sessionId
+    expect(resLen).toBeGreaterThan(0);
+    resLen = callPost('https://test.url', JSON.stringify({ sessionId: 'drop-x' })); // JSON with sessionId
+    expect(resLen).toBeGreaterThan(0);
+
     // Restore process.env
     process.env.DEFAULT_PROFILE_EMAIL = origEmail;
   });
@@ -774,5 +782,103 @@ describe('Silo Agent Test Suite (100% Coverage)', () => {
     process.env.DEFAULT_PROFILE_EMAIL = origEmail;
     delete process.env.DID;
     db.clearDb();
+  });
+
+  // --- 4. Security hardening coverage ---
+
+  test('requireAdmin enforces ADMIN_TOKEN when configured', async () => {
+    process.env.ADMIN_TOKEN = 'secret-token';
+    try {
+      await request(app).post('/api/admin/reset').expect(401);
+      await request(app).post('/api/admin/reset').set('Authorization', 'Bearer wrong').expect(401);
+      await request(app).post('/api/admin/reset').set('Authorization', 'Bearer secret-token').expect(200);
+    } finally {
+      delete process.env.ADMIN_TOKEN;
+    }
+  });
+
+  test('GET /api/enclave/pubkey returns the EdDSA public key', async () => {
+    const res = await request(app).get('/api/enclave/pubkey').expect(200);
+    expect(res.body.alg).toBe('EdDSA');
+    expect(res.body.publicKeyJwk.kty).toBe('OKP');
+  });
+
+  test('GET /api/seed redacts contact profiles and OTPs', async () => {
+    const openRes = await request(app).post('/api/drop/open').send({ outlet: 'newsroom-main' });
+    expect(openRes.body.debugOtp).toHaveLength(6);
+
+    const res = await request(app).get('/api/seed').expect(200);
+    expect(res.body.activeOtp).toBeNull();
+    expect(res.body.otps).toEqual({});
+    for (const did of Object.keys(res.body.profiles)) {
+      expect(res.body.profiles[did]).toEqual({ redacted: true });
+    }
+  });
+
+  test('debugOtp is withheld in production', async () => {
+    process.env.NODE_ENV = 'production';
+    try {
+      const res = await request(app).post('/api/drop/open').send({ outlet: 'newsroom-main' }).expect(200);
+      expect(res.body.debugOtp).toBeUndefined();
+    } finally {
+      process.env.NODE_ENV = 'test';
+    }
+  });
+
+  test('host_otp_verify rejects mock codes in production', async () => {
+    await request(app).post('/api/drop/open').send({ outlet: 'newsroom-main' });
+    const env = capturedImportObject.env;
+    const wasmMemory = capturedInstance.exports.memory as WebAssembly.Memory;
+    const buffer = new Uint8Array(wasmMemory.buffer);
+    const encoder = new TextEncoder();
+    const callOtpVerify = (code: string) => {
+      const codeBytes = encoder.encode(code);
+      buffer.set(codeBytes, 0);
+      return env.host_otp_verify(0, codeBytes.length);
+    };
+
+    const database = db.readDb();
+    database.activeOtp = '654321';
+    db.writeDb(database);
+
+    process.env.NODE_ENV = 'production';
+    try {
+      expect(callOtpVerify('883391')).toBe(0); // backdoor disabled in prod
+      expect(callOtpVerify('654321')).toBe(1); // the real session OTP still works
+    } finally {
+      process.env.NODE_ENV = 'test';
+    }
+  });
+
+  test('readDb backfills otps for a legacy db.json without otps', () => {
+    const DB_PATH = path.resolve(process.cwd(), 'data/db.json');
+    fs.writeFileSync(DB_PATH, JSON.stringify({
+      kv: {}, profiles: {}, mediaOutlets: [], dispatchedReports: [], stash: {}, activeOtp: null
+    }));
+    const data = db.readDb();
+    expect(data.otps).toEqual({});
+  });
+
+  test('readDb backs up a corrupt db.json before falling back', () => {
+    const DB_PATH = path.resolve(process.cwd(), 'data/db.json');
+    fs.writeFileSync(DB_PATH, 'totally not json');
+    const data = db.readDb();
+    expect(data.kv).toEqual({});
+    expect(fs.existsSync(`${DB_PATH}.corrupt`)).toBe(true);
+    fs.unlinkSync(`${DB_PATH}.corrupt`);
+  });
+
+  test('enclave keys can be loaded from SILO_ENCLAVE_PRIVATE_KEY PEM', () => {
+    jest.resetModules();
+    const cryptoMod = require('crypto');
+    const { privateKey } = cryptoMod.generateKeyPairSync('ed25519');
+    process.env.SILO_ENCLAVE_PRIVATE_KEY = privateKey.export({ type: 'pkcs8', format: 'pem' }) as string;
+    try {
+      const wr = require('../lib/wasmRunner');
+      const jwk = wr.getEnclavePublicKeyJwk();
+      expect(jwk.kty).toBe('OKP');
+    } finally {
+      delete process.env.SILO_ENCLAVE_PRIVATE_KEY;
+    }
   });
 });

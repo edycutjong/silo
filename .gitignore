@@ -31,6 +31,10 @@ coverage/
 *.pem
 *.key
 
+# Agent runtime database (generated at runtime; never commit live state)
+agent/data/db.json
+agent/data/db.json.*
+
 # System Files
 .DS_Store
 Thumbs.db

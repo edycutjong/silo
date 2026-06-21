@@ -35,19 +35,31 @@ extern "C" {
 
 #[cfg(target_arch = "wasm32")]
 fn kv_get(key: &str) -> Option<String> {
+    // First read with a default-sized buffer. The host returns the FULL byte
+    // length of the value (even when it exceeds the buffer) so we can detect
+    // truncation and re-read into a correctly sized buffer instead of silently
+    // dropping data or splitting a UTF-8 sequence.
     let mut buf = vec![0u8; 8192];
     let res = unsafe {
-        host_kv_store_get(
-            key.as_ptr(), key.len(),
-            buf.as_mut_ptr(), buf.len()
-        )
+        host_kv_store_get(key.as_ptr(), key.len(), buf.as_mut_ptr(), buf.len())
     };
-    if res >= 0 {
-        buf.truncate(res as usize);
-        String::from_utf8(buf).ok()
-    } else {
-        None
+    if res < 0 {
+        return None;
     }
+    let needed = res as usize;
+    if needed > buf.len() {
+        buf = vec![0u8; needed];
+        let res2 = unsafe {
+            host_kv_store_get(key.as_ptr(), key.len(), buf.as_mut_ptr(), buf.len())
+        };
+        if res2 < 0 {
+            return None;
+        }
+        buf.truncate(res2 as usize);
+    } else {
+        buf.truncate(needed);
+    }
+    String::from_utf8(buf).ok()
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -292,6 +304,10 @@ struct DropMetadata {
 #[serde(rename_all = "camelCase")]
 struct OpenDropRequest {
     outletId: String,
+    // Unguessable session suffix supplied by the coordinator (crypto-random).
+    // Optional so legacy/native callers still work; falls back to the clock.
+    #[serde(default)]
+    nonce: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -334,8 +350,8 @@ struct GetThreadRequest {
 #[no_mangle]
 pub unsafe extern "C" fn open_drop(ptr: *const u8, len: usize) -> u64 {
     let input = get_input_string(ptr, len);
-    log(&format!("Rust open_drop: input={}", input));
-    
+    log("Rust open_drop: processing payload...");
+
     let req: OpenDropRequest = match serde_json::from_str(&input) {
         Ok(r) => r,
         Err(e) => return return_string(format!(r#"{{"error":"Invalid payload: {}"}}"#, e)),
@@ -350,10 +366,16 @@ pub unsafe extern "C" fn open_drop(ptr: *const u8, len: usize) -> u64 {
     kv_set(counter_key, &count.to_string());
     
     let pseudonym = format!("Source #{}", count);
-    
-    // Generate a simple unique session ID
+
+    // Build the session ID. Prefer the coordinator-supplied crypto-random nonce
+    // (unguessable bearer token); fall back to the clock only for legacy callers.
     let now = get_now();
-    let session_id = format!("drop-{}-{}", count, now % 10000);
+    let suffix = if req.nonce.is_empty() {
+        format!("{}", now % 10000)
+    } else {
+        req.nonce.clone()
+    };
+    let session_id = format!("drop-{}-{}", count, suffix);
     
     let session = DropSession {
         id: session_id.clone(),
@@ -438,8 +460,9 @@ pub unsafe extern "C" fn attach_evidence(ptr: *const u8, len: usize) -> u64 {
 #[no_mangle]
 pub unsafe extern "C" fn verify_source(ptr: *const u8, len: usize) -> u64 {
     let input = get_input_string(ptr, len);
-    log(&format!("Rust verify_source: input={}", input));
-    
+    // Do not log the raw input: it contains the OTP code.
+    log("Rust verify_source: processing payload...");
+
     let req: VerifySourceRequest = match serde_json::from_str(&input) {
         Ok(r) => r,
         Err(e) => return return_string(format!(r#"{{"error":"Invalid payload: {}"}}"#, e)),
@@ -507,9 +530,11 @@ pub unsafe extern "C" fn submit_report(ptr: *const u8, len: usize) -> u64 {
         None => return return_string(r#"{"error":"Failed to sign report manifest VC"}"#.to_string()),
     };
     
-    // Dispatch to journalist outbox using placeholders
-    // The placeholder resolves target contact from user profile
+    // Dispatch to journalist outbox using placeholders.
+    // `sessionId` lets the host egress resolve the contact bound to THIS session
+    // (not a shared global profile); the placeholder is replaced at host egress.
     let body = serde_json::json!({
+        "sessionId": session.id,
         "pseudonym": session.pseudonym,
         "evidenceHash": session.evidenceHash,
         "manifestSignature": signed_vc,
@@ -551,8 +576,9 @@ pub unsafe extern "C" fn submit_report(ptr: *const u8, len: usize) -> u64 {
 #[no_mangle]
 pub unsafe extern "C" fn relay_message(ptr: *const u8, len: usize) -> u64 {
     let input = get_input_string(ptr, len);
-    log(&format!("Rust relay_message: input={}", input));
-    
+    // Do not log the raw input: it contains the (potentially identifying) message body.
+    log("Rust relay_message: processing payload...");
+
     let req: RelayMessageRequest = match serde_json::from_str(&input) {
         Ok(r) => r,
         Err(e) => return return_string(format!(r#"{{"error":"Invalid payload: {}"}}"#, e)),
