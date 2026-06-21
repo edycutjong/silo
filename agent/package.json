@@ -1,6 +1,6 @@
 {
   "name": "silo-agent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Silo TEE Host Agent Gateway Process",
   "main": "dist/index.js",
   "scripts": {

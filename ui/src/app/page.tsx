@@ -635,7 +635,7 @@ export default function Home() {
                       <div className="space-y-2">
                         <label className="text-xs font-mono text-slate-400 uppercase tracking-wider">Secure Contact (PII)</label>
                         <input 
-                          type="email" 
+                          type="text" 
                           value={contactInfo} 
                           onChange={(e) => setContactInfo(e.target.value)}
                           className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"

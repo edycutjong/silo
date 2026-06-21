@@ -1,6 +1,6 @@
 {
   "name": "@edycutjong/silo-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Silo Command Line Interface for Whistleblower Submissions",
   "main": "dist/index.js",
   "bin": {
